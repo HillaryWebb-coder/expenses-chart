@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+
+  <title>Frontend Mentor | Expenses chart component</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap");
+
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    :root {
+      --softred: hsl(10, 79%, 65%);
+      --cyan: hsl(186, 34%, 60%);
+      --darkbrown: hsl(25, 47%, 15%);
+      --mediumbrown: hsl(28, 10%, 53%);
+      --cream: hsl(27, 66%, 92%);
+      --paleorange: hsl(33, 100%, 98%);
+    }
+
+
+    html {
+      font-size: 18px;
+    }
+
+    body {
+      font-family: "DM Sans", sans-serif;
+      font-size: 1rem;
+      background-color: var(--cream);
+      padding: 1rem;
+      color: var(--darkbrown);
+      height: 100vh;
+      /* width: 100%; */
+    }
+
+    .container {
+      margin: auto;
+      max-width: 500px;
+      height: 100%;
+      /* display: flex;
+      justify-content: center;
+      flex-direction: column; */
+    }
+
+    hr {
+      width: 100%;
+      color: var(--darkbrown);
+      margin: 1rem 0;
+    }
+
+    header {
+      /* width: 100%; */
+      background-color: var(--softred);
+      border-radius: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      color: var(--paleorange);
+      width: 100%;
+    }
+
+    .heading {
+      font-weight: 400;
+    }
+
+    .balance {
+      font-size: 2rem;
+    }
+
+    .expenses {
+      margin: 1rem 0;
+      background-color: var(--paleorange);
+      border-radius: 0.9rem;
+      padding: 1rem;
+    }
+
+    .expenses-heading {
+      font-size: 1.3rem;
+      margin-bottom: 3rem;
+    }
+
+    .expenses-chart {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: end;
+      gap: 1rem;
+    }
+
+    .expense-block::after,
+    .expense-block::before {
+      width: 100%;
+      font-size: .5rem;
+      text-align: center;
+      position: absolute;
+    }
+
+    .expense-block {
+      width: 100%;
+      background-color: var(--softred);
+      border-radius: 0.2rem;
+      position: relative;
+      margin: 1.5rem 0;
+    }
+
+    .expense-block::after {
+      content: attr(id);
+      display: block;
+      align-self: center;
+      margin: -0.2rem 0;
+      bottom: -20px;
+      color: var(--mediumbrown);
+    }
+
+    .expense-block::before {
+      content: attr(title);
+      display: block;
+      position: absolute;
+      top: -33px;
+      left: -5px;
+      padding: .3rem;
+      background-color: var(--darkbrown);
+      color: var(--paleorange);
+      border-radius: .2rem;
+    }
+
+    .expenses-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total {
+      font-size: 1.5rem;
+    }
+
+    .expenses-total p {
+      font-size: .75rem;
+      color: var(--mediumbrown);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .percentage {
+      text-align: right;
+    }
+
+    .attribution {
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="account-balance">
+        <h3 class="heading">My balance</h3>
+        <h2 class="balance">$921.48</h2>
+      </div>
+      <div class="logo">
+        <svg width="72" height="48" viewBox="0 0 72 48" xmlns="http://www.w3.org/2000/svg">
+          <g fill="none" fill-rule="evenodd">
+            <circle fill="#382314" cx="48" cy="24" r="24" />
+            <circle stroke="#FFF" stroke-width="2" cx="24" cy="24" r="23" />
+          </g>
+        </svg>
+      </div>
+    </header>
+    <div class="expenses">
+      <h2 class="expenses-heading">Spending - Last 7 days</h2>
+      <div class="expenses-chart">
+        <!-- <div class="expense-block hidden"></div> -->
+      </div>
+      <hr />
+      <div class="expenses-total">
+        <div>
+          <p class="expenses-total-text">Total this month</p>
+          <h1 class="total">$478.33</h1>
+        </div>
+        <div>
+          <h4 class="percentage">+2.4%</h4>
+          <p class="time-period">from last month</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. Coded by <a
+        href="#">Ogieleguea Hillary</a>.
+    </div>
+  </div>
+  <script>
+    const expenseBlock = document.createElement('div');
+    expenseBlock.classList.add('expense-block');
+    const chart = document.querySelector(".expenses-chart");
+
+    async function getData() {
+      const res = await fetch("data.json");
+      const data = await res.json();
+      return data;
+    }
+
+    let expenseData = {}
+
+    getData().then(
+      data => {
+        data.map((expense) => {
+          expenseBlock.style.height = `${expense.amount * 3}px`;
+          expenseBlock.title = `$${expense.amount}`;
+          expenseBlock.id = `${expense.day}`;
+          chart.innerHTML += expenseBlock.outerHTML;
+          console.log(expenseBlock.style.height);
+        })
+
+      }
+    );
+
+
+  </script>
+</body>
+
+</html>
