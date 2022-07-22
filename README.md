@@ -34,8 +34,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://expenses-application-chart.netlify.app/)
+- Solution URL: [solution URL](https://github.com/HillaryWebb-coder/expenses-chart)
+- Live Site URL: [live site URL](https://expenses-application-chart.netlify.app/)
 
 ## My process
 
